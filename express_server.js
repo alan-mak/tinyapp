@@ -9,6 +9,7 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+// Main Page says hello
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
@@ -20,6 +21,12 @@ app.get("/urls.json", (req, res) => {
 app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
+
+// Adding a route handler to pass the URL to template
+app.get("/urls", (req, res) => {
+  const templateVars = {urls: urlDatabase};
+  res.render("urls_index", templateVars);
+})
 
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
