@@ -48,7 +48,7 @@ app.post("/urls", (req, res) => {
   urlDatabase[randomString] = req.body.longURL;
 
   //Now we redirect to the /urls/:shortURL
-  res.send(`Redirecting to /urls/:${randomString}`);
+  res.redirect('/urls')
 });
 
 // Redirection to LongURL
