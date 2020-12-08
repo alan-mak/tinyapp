@@ -28,6 +28,11 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", templateVars);
 })
 
+// Adding a route to show a form
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
+})
+
 // Adding a route for long url to short url
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {shortURL: req.params.shortURL, longURL: req.params.longURL};
