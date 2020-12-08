@@ -17,6 +17,8 @@
         <tr>
           <th scope="col">Short URL</th>
           <th scope="col">Long URL</th>
+          <!-- Added the column for delete -->
+          <th scope="col">Delete</th>
         </tr>
       </thead>
       <tbody>
@@ -24,9 +26,13 @@
           <tr>
             <td><%= url %></td>
             <td><%= urls[url] %></td>
+            <!-- Creating a button to delete the post -->
+            <td><form method="POST" action="/urls/<% url %>/delete">
+              <button type="submit">Delete</button>
+            </form></td>
           </tr>
-        <% } %>
-      </tbody>
+          <% } %>
+        </tbody>
     </table>
   </main>
   <!-- Bootstrap JS -->
