@@ -51,6 +51,12 @@ app.post("/urls", (req, res) => {
   res.send(`Redirecting to /urls/:${randomString}`);
 });
 
+// Redirection to LongURL
+app.get("/u/:shortURL", (req, res) => {
+  // const longURL = ...
+  res.redirect(urlDatabase[req.params.shortURL])
+});
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
