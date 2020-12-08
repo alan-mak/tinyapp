@@ -5,7 +5,7 @@ const PORT = 8080; // default port 8080
 app.set("view engine", "ejs");
 
 const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -13,9 +13,8 @@ const urlDatabase = {
 };
 
 // Generates a string of 6 random alphanumeric characters
-function generateRandomString() {
-  return Math.random().toString(36).substring(2,8);
-}
+let generateRandomString = () => Math.random().toString(36).substring(2, 8);
+
 
 // Main Page says hello
 app.get("/", (req, res) => {
@@ -28,7 +27,7 @@ app.get("/urls.json", (req, res) => {
 
 // Adding a route handler to pass the URL to template
 app.get("/urls", (req, res) => {
-  const templateVars = {urls: urlDatabase};
+  const templateVars = { urls: urlDatabase };
   res.render("urls_index", templateVars);
 });
 
@@ -39,7 +38,7 @@ app.get("/urls/new", (req, res) => {
 
 // Adding a route for long url to short url
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = {shortURL: req.params.shortURL, longURL: req.params.longURL};
+  const templateVars = { shortURL: req.params.shortURL, longURL: req.params.longURL };
   res.render("urls_show", templateVars);
 });
 
@@ -52,3 +51,5 @@ app.post("/urls", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+console.log(generateRandomString())
