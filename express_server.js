@@ -47,7 +47,7 @@ app.post("/urls", (req, res) => {
   let randomString = generateRandomString();
   urlDatabase[randomString] = req.body.longURL;
 
-  //Now we redirect to the /urls/:shortURL
+  //Now we redirect to the index
   res.redirect('/urls');
 });
 
@@ -58,9 +58,17 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect('/urls');
 })
 
+// Route to edit
+app.post("/urls/:shortURL", (req, res) => {
+  let key = req.params.shortURL;
+  // Using the field provided in urls_show name of the text box
+  let newURL = req.body.newAddress;
+  urlDatabase[key] = newURL;
+  res.redirect(`/urls/${key}`)
+})
+
 // Redirection to LongURL
 app.get("/u/:shortURL", (req, res) => {
-  // const longURL = ...
   res.redirect(urlDatabase[req.params.shortURL])
 });
 
