@@ -12,6 +12,11 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+// Generates a string of 6 random alphanumeric characters
+function generateRandomString() {
+  return Math.random().toString(36).substring(2,8);
+}
+
 // Main Page says hello
 app.get("/", (req, res) => {
   res.send("Hello!");
