@@ -18,7 +18,7 @@ let generateRandomString = () => Math.random().toString(36).substring(2, 8);
 
 // Main Page says hello
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  res.send("Hello! Welcome to Alan's TinyAPP");
 });
 
 app.get("/urls.json", (req, res) => {
