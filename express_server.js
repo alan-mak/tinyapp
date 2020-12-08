@@ -48,8 +48,15 @@ app.post("/urls", (req, res) => {
   urlDatabase[randomString] = req.body.longURL;
 
   //Now we redirect to the /urls/:shortURL
-  res.redirect('/urls')
+  res.redirect('/urls');
 });
+
+// Route to delete from database
+app.post("/urls/:shortURL/delete", (req, res) => {
+  let key = req.params.shortURL;
+  delete urlDatabase[key];
+  res.redirect('/urls');
+})
 
 // Redirection to LongURL
 app.get("/u/:shortURL", (req, res) => {
