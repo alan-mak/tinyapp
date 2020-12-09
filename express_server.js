@@ -20,16 +20,14 @@ let generateRandomString = () => Math.random().toString(36).substring(2, 8);
 
 // Main Page says hello
 app.get("/", (req, res) => {
-  res.send("Hello! Welcome to Alan's TinyAPP");
+  res.redirect("/urls");
 });
 
-app.get("/urls.json", (req, res) => {
-  res.json(urlDatabase);
-});
+app.get("/urls.json", (req, res) => res.json(urlDatabase));
 
 // Adding a route handler to pass the URL to template
 app.get("/urls", (req, res) => {
-  const templateVars = { 
+  const templateVars = {
     urls: urlDatabase,
     username: req.cookies["username"]
   };
@@ -38,7 +36,7 @@ app.get("/urls", (req, res) => {
 
 // Adding a route to show a form
 app.get("/urls/new", (req, res) => {
-  const templateVars = { 
+  const templateVars = {
     urls: urlDatabase,
     username: req.cookies["username"]
   };
@@ -47,11 +45,11 @@ app.get("/urls/new", (req, res) => {
 
 // Adding a route for long url to short url
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { 
+  const templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
     username: req.cookies["username"]
-   };
+  };
   res.render("urls_show", templateVars);
 });
 
@@ -77,12 +75,12 @@ app.post("/urls/:shortURL", (req, res) => {
   // Using the field provided in urls_show name of the text box
   let newURL = req.body.newAddress;
   urlDatabase[key] = newURL;
-  res.redirect(`/urls/${key}`)
+  res.redirect(`/urls/${key}`);
 });
 
 // Redirection to LongURL
 app.get("/u/:shortURL", (req, res) => {
-  res.redirect(urlDatabase[req.params.shortURL])
+  res.redirect(urlDatabase[req.params.shortURL]);
 });
 
 // Route to login
@@ -90,6 +88,13 @@ app.get("/u/:shortURL", (req, res) => {
 app.post("/login", (req, res) => {
   // Setting a cookie for the login name
   res.cookie("username", req.body.username);
+  res.redirect('/urls');
+});
+
+// Route to logout
+app.post("/logout", (req, res) => {
+  // Clear cookies command by username
+  res.clearCookie("username");
   res.redirect('/urls');
 });
 

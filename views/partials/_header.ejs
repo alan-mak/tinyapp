@@ -19,8 +19,11 @@
       <button type="submit">Submit</button>
     </form>
     <%} else {%>
-      <!-- Display the username if logged in -->
-    <p><%= username %></p>
+      <!-- Display the username if logged in and Logout Button-->
+    <h6> Logged In As: <%= username %></h6>
+    <form method="POST" action="/logout">
+      <button type="submit">LOG OUT</button>
+    </form>
     <%}%>
   </nav>
 </header>
