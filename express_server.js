@@ -31,6 +31,16 @@ const users = {
 // Generates a string of 6 random alphanumeric characters
 let generateRandomString = () => Math.random().toString(36).substring(2, 8);
 
+// Email Checker for object
+let emailChecker = function (obj, email) {
+  for(let randomIDKey of Object.keys(obj)) {
+    if(obj[randomIDKey].email === email) {
+      return true;
+    }
+  }
+  return false;
+};
+
 
 // Main Page redirection
 app.get("/", (req, res) => {
@@ -58,16 +68,20 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  let randomID = generateRandomString();
-  users[randomID] = {
-    id: randomID,
-    email: req.body.email,
-    password: req.body.password
-  }
+  // Checks if email and password was given
   if (!req.body.email || !req.body.password) {
     res.statusCode = 400;
-    res.send("<h1>400 BAD REQUEST</h1>")
+    res.send("<h1>400 BAD REQUEST</h1>");
+  } else if (emailChecker(users, req.body.email)) { // Checks if the email has been used before
+    res.statusCode = 400;
+    res.send("<h1>400 BAD REQUEST</h1>");
   } else {
+    let randomID = generateRandomString();
+    users[randomID] = {
+      id: randomID,
+      email: req.body.email,
+      password: req.body.password
+    }
     res.cookie("user_id", randomID);
     res.redirect("/urls");
   }
