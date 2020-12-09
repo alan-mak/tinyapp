@@ -29,18 +29,29 @@ app.get("/urls.json", (req, res) => {
 
 // Adding a route handler to pass the URL to template
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  const templateVars = { 
+    urls: urlDatabase,
+    username: req.cookies["username"]
+  };
   res.render("urls_index", templateVars);
 });
 
 // Adding a route to show a form
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const templateVars = { 
+    urls: urlDatabase,
+    username: req.cookies["username"]
+  };
+  res.render("urls_new", templateVars);
 });
 
 // Adding a route for long url to short url
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
+  const templateVars = { 
+    shortURL: req.params.shortURL,
+    longURL: urlDatabase[req.params.shortURL],
+    username: req.cookies["username"]
+   };
   res.render("urls_show", templateVars);
 });
 
@@ -75,9 +86,10 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 // Route to login
+
 app.post("/login", (req, res) => {
   // Setting a cookie for the login name
-  res.cookie(req.body.username, true);
+  res.cookie("username", req.body.username);
   res.redirect('/urls');
 });
 
