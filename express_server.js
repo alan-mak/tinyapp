@@ -137,10 +137,18 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 // Route to login
+app.get("/login", (req, res) => {
+  const templateVars = {
+    shortURL: req.params.shortURL,
+    longURL: urlDatabase[req.params.shortURL],
+    user: users[req.cookies["user_id"]]
+  };
+  res.render("urls_login", templateVars);
+});
 // Starting to not work after putting in register
 app.post("/login", (req, res) => {
   // Setting a cookie for the login name
-  res.cookie("user_id", req.body.username);
+  res.cookie("user_id", users[req.cookies["user_id"]]);
   res.redirect('/urls');
 });
 
