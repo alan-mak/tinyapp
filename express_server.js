@@ -1,11 +1,13 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
+const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser');
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 
 app.set("view engine", "ejs");
-
-const bodyParser = require("body-parser");
-app.use(bodyParser.urlencoded({ extended: true }));
 
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -56,7 +58,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   let key = req.params.shortURL;
   delete urlDatabase[key];
   res.redirect('/urls');
-})
+});
 
 // Route to edit
 app.post("/urls/:shortURL", (req, res) => {
@@ -65,11 +67,18 @@ app.post("/urls/:shortURL", (req, res) => {
   let newURL = req.body.newAddress;
   urlDatabase[key] = newURL;
   res.redirect(`/urls/${key}`)
-})
+});
 
 // Redirection to LongURL
 app.get("/u/:shortURL", (req, res) => {
   res.redirect(urlDatabase[req.params.shortURL])
+});
+
+// Route to login
+app.post("/login", (req, res) => {
+  // Setting a cookie for the login name
+  res.cookie(req.body.username, true);
+  res.redirect('/urls');
 });
 
 app.listen(PORT, () => {
