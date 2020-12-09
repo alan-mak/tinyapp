@@ -64,8 +64,13 @@ app.post("/register", (req, res) => {
     email: req.body.email,
     password: req.body.password
   }
-  res.cookie("user_id", randomID);
-  res.redirect("/urls");
+  if (!req.body.email || !req.body.password) {
+    res.statusCode = 400;
+    res.send("<h1>400 BAD REQUEST</h1>")
+  } else {
+    res.cookie("user_id", randomID);
+    res.redirect("/urls");
+  }
 })
 
 // Adding a route to show a form
