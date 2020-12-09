@@ -14,6 +14,20 @@ let urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+// Store and access users in an app
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+};
+
 // Generates a string of 6 random alphanumeric characters
 let generateRandomString = () => Math.random().toString(36).substring(2, 8);
 
@@ -29,7 +43,7 @@ app.get("/urls.json", (req, res) => res.json(urlDatabase));
 app.get("/urls", (req, res) => {
   const templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    user: users[req.cookies["user_id"]]
   };
   res.render("urls_index", templateVars);
 });
@@ -38,16 +52,27 @@ app.get("/urls", (req, res) => {
 app.get("/register", (req, res) => {
   const templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    user: users[req.cookies["user_id"]]
   };
   res.render("urls_register", templateVars);
 });
+
+app.post("/register", (req, res) => {
+  let randomID = generateRandomString();
+  users[randomID] = {
+    id: randomID,
+    email: req.body.email,
+    password: req.body.password
+  }
+  res.cookie("user_id", randomID);
+  res.redirect("/urls");
+})
 
 // Adding a route to show a form
 app.get("/urls/new", (req, res) => {
   const templateVars = {
     urls: urlDatabase,
-    username: req.cookies["username"]
+    user: users[req.cookies["user_id"]]
   };
   res.render("urls_new", templateVars);
 });
@@ -57,7 +82,7 @@ app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    username: req.cookies["username"]
+    user: users[req.cookies["user_id"]]
   };
   res.render("urls_show", templateVars);
 });
@@ -93,17 +118,17 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 // Route to login
-
+// Starting to not work after putting in register
 app.post("/login", (req, res) => {
   // Setting a cookie for the login name
-  res.cookie("username", req.body.username);
+  res.cookie("user_id", req.body.username);
   res.redirect('/urls');
 });
 
 // Route to logout
 app.post("/logout", (req, res) => {
   // Clear cookies command by username
-  res.clearCookie("username");
+  res.clearCookie("user_id");
   res.redirect('/urls');
 });
 
