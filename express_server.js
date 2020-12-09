@@ -18,7 +18,7 @@ let urlDatabase = {
 let generateRandomString = () => Math.random().toString(36).substring(2, 8);
 
 
-// Main Page says hello
+// Main Page redirection
 app.get("/", (req, res) => {
   res.redirect("/urls");
 });
@@ -32,6 +32,15 @@ app.get("/urls", (req, res) => {
     username: req.cookies["username"]
   };
   res.render("urls_index", templateVars);
+});
+
+// Route to register
+app.get("/register", (req, res) => {
+  const templateVars = {
+    urls: urlDatabase,
+    username: req.cookies["username"]
+  };
+  res.render("urls_register", templateVars);
 });
 
 // Adding a route to show a form
