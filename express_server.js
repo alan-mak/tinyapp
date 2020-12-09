@@ -15,15 +15,15 @@ let urlDatabase = {
 };
 
 // Store and access users in an app
-const users = { 
+const users = {
   "userRandomID": {
-    id: "userRandomID", 
-    email: "user@example.com", 
-    password: "purple-monkey-dinosaur"
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "123"
   },
- "user2RandomID": {
-    id: "user2RandomID", 
-    email: "user2@example.com", 
+  "user2RandomID": {
+    id: "user2RandomID",
+    email: "user2@example.com",
     password: "dishwasher-funk"
   }
 };
@@ -31,16 +31,24 @@ const users = {
 // Generates a string of 6 random alphanumeric characters
 let generateRandomString = () => Math.random().toString(36).substring(2, 8);
 
+// Checks Email and Password in database
+const loginUser = function (users, email, password) {
+  for (let key in users) {
+    if ((users[key].email === email) && (users[key].password === password)) {
+      return users[key]
+    }
+  }
+}
+
 // Email Checker for object
 let emailChecker = function (obj, email) {
-  for(let randomIDKey of Object.keys(obj)) {
-    if(obj[randomIDKey].email === email) {
+  for (let randomIDKey of Object.keys(obj)) {
+    if (obj[randomIDKey].email === email) {
       return true;
     }
   }
   return false;
 };
-
 
 // Main Page redirection
 app.get("/", (req, res) => {
@@ -87,7 +95,7 @@ app.post("/register", (req, res) => {
   }
 })
 
-// Adding a route to show a form
+// Adding a route to new URL
 app.get("/urls/new", (req, res) => {
   const templateVars = {
     urls: urlDatabase,
@@ -145,16 +153,24 @@ app.get("/login", (req, res) => {
   };
   res.render("urls_login", templateVars);
 });
-// Starting to not work after putting in register
+
 app.post("/login", (req, res) => {
   // Setting a cookie for the login name
-  res.cookie("user_id", users[req.cookies["user_id"]]);
-  res.redirect('/urls');
+  const existingUser = loginUser(users, req.body.email, req.body.password);
+  if (existingUser) {
+    // set the cookie with user.id
+    res.cookie("user_id", users[existingUser.id].id)
+    // redirect to /urls
+    res.redirect("/urls");
+    return
+  }
+  req.statusCode = 403;
+  res.send('<h1> ERROR 403 - Invalid Email Or Password </h1>')
 });
 
 // Route to logout
 app.post("/logout", (req, res) => {
-  // Clear cookies command by username
+  // Clear cookies command by user_id
   res.clearCookie("user_id");
   res.redirect('/urls');
 });

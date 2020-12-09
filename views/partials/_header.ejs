@@ -14,14 +14,14 @@
     <% if(!user) { %>
       <!-- Login Button and Text Box -->
     <form method="POST" action="/login">
-      <a style = "margin: 1em; text-align: right;" href ="/login">LOGIN</a>
-      <a style = "margin: 1em; text-align: right;" href ="/register">REGISTER</a>
+      <a style = "margin: 1em;" href ="/login">LOGIN</a>
+      <a style = "margin: 1em;" href ="/register">REGISTER</a>
     </form>
     <%} else {%>
       <!-- Display the username if logged in and Logout Button-->
     <h6> Logged In As: <%= user.email %></h6>
     <form method="POST" action="/logout">
-      <button type="submit">LOG OUT</button>
+      <button style = "margin: 1em;" type="submit">LOG OUT</button>
     </form>
     <%}%>
   </nav>
