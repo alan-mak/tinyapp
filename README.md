@@ -8,14 +8,25 @@ TinyApp is a full stack web application built with Node and Express that allows 
 * They allow for people to remember links easier
   * 8 letters would be a lot easier to remember than 30
 
+## Product Features
+* Registered users have their own library of shortened links
+* Registered and logged in users are able to edit and delete their own links
+  * Anyone is able to click on the shortened link
+* All shortened links are selectable and will redirect to to the long URL
+* Users are able to see their emails when logged in
+
 ## Final Product
 
-!["Main URL Page"](https://github.com/alan-mak/tinyapp/blob/master/docs/urls-page.png)
 A simple user friendly home page to shorten the longest of URLs
-!["Different User's Different Link"](https://github.com/alan-mak/tinyapp/blob/master/docs/different-users.png)
+!["Main URL Page"](https://github.com/alan-mak/tinyapp/blob/master/docs/urls-page.png)
+
+
 Registered user's are able to have their own shortned links to share
-!["Edit Page"](https://github.com/alan-mak/tinyapp/blob/master/docs/edit-page.png)
+!["Different User's Different Link"](https://github.com/alan-mak/tinyapp/blob/master/docs/different-users.png)
+
+
 Registered user's are able to reuse their shortened URL by providing a new URL
+!["Edit Page"](https://github.com/alan-mak/tinyapp/blob/master/docs/edit-page.png)
 ## Dependencies
 
 - Node.js
