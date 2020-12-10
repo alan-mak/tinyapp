@@ -2,11 +2,11 @@ const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
-const cookieSession = require('cookie-session');
-const bcrypt = require('bcrypt');
+const cookieSession = require("cookie-session");
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const { urlsForUser, getUserByEmail, loginUser, generateRandomString } = require('./helpers');
-const { urlDatabase, users } = require('./data');
+const { urlsForUser, getUserByEmail, loginUser, generateRandomString } = require("./helpers");
+const { urlDatabase, users } = require("./data");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({
@@ -24,10 +24,12 @@ app.get("/", (req, res) => {
 
 // Adding a route handler to pass the URL to template
 app.get("/urls", (req, res) => {
+  // User Login Logic
   let userID = req.session["user_id"];
   if (!userID) {
     return res.redirect('/register');
   }
+  // Finds all the urls that the user has created
   let userURLS = urlsForUser(userID);
   const templateVars = {
     urls: userURLS,
@@ -46,11 +48,12 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  // Checks if email and password was given and if email has been used before
+  // Checks if email or password was given and if email has been used before
   if (!req.body.email || !req.body.password || getUserByEmail(req.body.email, users)) {
     res.statusCode = 400;
-    res.send("<h1>400 BAD REQUEST</h1>");
+    res.send("<h1>400 - BAD REQUEST</h1>");
   } else {
+    // Registers new user
     let randomID = generateRandomString();
     users[randomID] = {
       id: randomID,
@@ -77,7 +80,7 @@ app.get("/urls/new", (req, res) => {
   }
 });
 
-// Adding a route for long url to short url
+// Adding a route form short url to long url
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL,
@@ -95,7 +98,7 @@ app.post("/urls", (req, res) => {
     userID: req.session["user_id"]
   };
   //Now we redirect to the index
-  res.redirect('/urls');
+  res.redirect("/urls");
 });
 
 // Route to delete from database
@@ -107,7 +110,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   } else {
     let key = req.params.shortURL;
     delete urlDatabase[key];
-    res.redirect('/urls');
+    res.redirect("/urls");
   }
 });
 
@@ -154,17 +157,20 @@ app.post("/login", (req, res) => {
     res.redirect("/urls");
     return;
   }
-  req.statusCode = 403;
-  res.send('<h1> ERROR 403 - Invalid Email Or Password </h1>');
+  //If user does not exist
+  res.statusCode = 403;
+  res.send("<h1> ERROR 403 - INVALID EMAIL OR PASSWORD </h1>");
 });
 
 // Route to logout
 app.post("/logout", (req, res) => {
-  // Clear cookies command by user_id
+  // Clear cookies command
   req.session = null;
-  res.redirect('/urls');
+  res.redirect("/urls");
 });
 
+/* ------------------------------------------------------------------------------ */
+
 app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
+  console.log(`TinyApp listening on port ${PORT}!`);
 });

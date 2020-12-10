@@ -7,7 +7,7 @@
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css"
     integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
-  <title>URL - TinyApp Example</title>
+  <title>TinyApp - Short URL</title>
 </head>
 
 <body>
@@ -20,7 +20,7 @@
       <!-- Edit button and text box to edit long url -->
       <form method="POST" action="/urls/<%= shortURL %>">
         <label>New URL</label>
-        <input type="text" name="newAddress" placeholder="http://"/>
+        <input type="text" name="newAddress" placeholder="http://" />
         <button type="submit" class="btn btn-primary">Edit</button>
       </form>
       <!-- Shows the tiney url as a pressable link -->

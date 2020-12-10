@@ -12,13 +12,13 @@
       </div>
     </div>
     <% if(!user) { %>
-      <!-- Login Button and Text Box -->
+    <!-- Login Button and Text Box -->
     <form method="POST" action="/login">
-      <a style = "margin: 1em;" href ="/login">LOGIN</a>
-      <a style = "margin: 1em;" href ="/register">REGISTER</a>
+      <a style="margin: 1em;" href="/login">LOGIN</a>
+      <a style="margin: 1em;" href="/register">REGISTER</a>
     </form>
     <%} else {%>
-      <!-- Display the username if logged in and Logout Button-->
+    <!-- Display the username if logged in and Logout Button-->
     <h6> Logged In As: <%= user.email %></h6>
     <form method="POST" action="/logout">
       <button type="submit" class="btn btn-primary">LOG OUT</button>
