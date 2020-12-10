@@ -10,8 +10,8 @@ app.use(cookieParser());
 app.set("view engine", "ejs");
 
 const urlDatabase = {
-  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
-  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "userRandomID" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "userRandomID" }
 };
 
 // Store and access users in an app
@@ -38,6 +38,7 @@ const loginUser = function (users, email, password) {
       return users[key]
     }
   }
+  
 }
 
 // Email Checker for object
@@ -50,7 +51,16 @@ let emailChecker = function (obj, email) {
   return false;
 };
 
-
+// Returns URL where the userID is equal to the current logged in user
+let urlsForUser = function(id) {
+  let userURL = {};
+  for (let key in urlDatabase) {
+    if (id === urlDatabase[key].userID) {
+      userURL[key] = urlDatabase[key]
+    }
+  }
+  return userURL;
+}
 
 // Logic for login
 let loggedIn = false;
@@ -64,9 +74,14 @@ app.get("/urls.json", (req, res) => res.json(urlDatabase));
 
 // Adding a route handler to pass the URL to template
 app.get("/urls", (req, res) => {
+  let userID = req.cookies.user_id;
+  if (!userID) {
+    return res.redirect('/register');
+  }
+  let userURLS = urlsForUser(userID);
   const templateVars = {
-    urls: urlDatabase,
-    user: users[req.cookies["user_id"]]
+    urls: userURLS,
+    user: users[userID]
   };
   res.render("urls_index", templateVars);
 });
@@ -174,7 +189,7 @@ app.post("/login", (req, res) => {
   const existingUser = loginUser(users, req.body.email, req.body.password);
   if (existingUser) {
     // set the cookie with user.id
-    res.cookie("user_id", users[existingUser.id].id);
+    res.cookie("user_id", existingUser.id);
     loggedIn = true;
     // redirect to /urls
     res.redirect("/urls");
