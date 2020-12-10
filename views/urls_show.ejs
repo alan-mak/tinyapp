@@ -15,11 +15,12 @@
     <div class="card-header"></div>
     <div class="card-body">
       <!-- Shows the Long URL  -->
-      <h5 class="card-title">TinyURL for: <%= longURL %></h5>
+      <h3 class="card-title">TinyURL for: <%= longURL %></h3>
+      <h6>Must include http:// infront or else the link will not work</h6>
       <!-- Edit button and text box to edit long url -->
       <form method="POST" action="/urls/<%= shortURL %>">
         <label>New URL</label>
-        <input type="text" name="newAddress"/>
+        <input type="text" name="newAddress" placeholder="http://"/>
         <button type="submit" class="btn btn-primary">Edit</button>
       </form>
       <!-- Shows the tiney url as a pressable link -->

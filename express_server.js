@@ -5,75 +5,22 @@ const bodyParser = require("body-parser");
 const cookieSession = require('cookie-session');
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+const { urlsForUser, getUserByEmail, loginUser, generateRandomString } = require('./helpers');
+const { urlDatabase, users } = require('./data');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2']
-}))
+}));
 
 app.set("view engine", "ejs");
 
-const urlDatabase = {
-  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "userRandomID" },
-  i3BoGr: { longURL: "https://www.google.ca", userID: "userRandomID" }
-};
-
-// Store and access users in an app
-const users = {
-  "userRandomID": {
-    id: "userRandomID",
-    email: "user@example.com",
-    password: bcrypt.hashSync("123", saltRounds)
-  },
-  "user2RandomID": {
-    id: "user2RandomID",
-    email: "user2@example.com",
-    password: bcrypt.hashSync("dishwasher-funk", saltRounds)
-  }
-};
-
-// Generates a string of 6 random alphanumeric characters
-let generateRandomString = () => Math.random().toString(36).substring(2, 8);
-
-// Checks Email and Password in database
-const loginUser = function (users, email, password) {
-  for (let key in users) {
-    if ((users[key].email === email) && (bcrypt.compareSync(password, users[key].password))) {
-      return users[key]
-    }
-  }
-  
-}
-
-// Email Checker for object
-let emailChecker = function (obj, email) {
-  for (let randomIDKey of Object.keys(obj)) {
-    if (obj[randomIDKey].email === email) {
-      return true;
-    }
-  }
-  return false;
-};
-
-// Returns URL where the userID is equal to the current logged in user
-let urlsForUser = function(id) {
-  let userURL = {};
-  for (let key in urlDatabase) {
-    if (id === urlDatabase[key].userID) {
-      userURL[key] = urlDatabase[key]
-    }
-  }
-  return userURL;
-}
-
+/* ------------------------------------------------------------------------------ */
 // Main Page redirection
 app.get("/", (req, res) => {
   res.redirect("/urls");
 });
-
-app.get("/urls.json", (req, res) => res.json(urlDatabase));
-app.get("/urls/users.json", (req, res) => res.json(users));
 
 // Adding a route handler to pass the URL to template
 app.get("/urls", (req, res) => {
@@ -99,11 +46,8 @@ app.get("/register", (req, res) => {
 });
 
 app.post("/register", (req, res) => {
-  // Checks if email and password was given
-  if (!req.body.email || !req.body.password) {
-    res.statusCode = 400;
-    res.send("<h1>400 BAD REQUEST</h1>");
-  } else if (emailChecker(users, req.body.email)) { // Checks if the email has been used before
+  // Checks if email and password was given and if email has been used before
+  if (!req.body.email || !req.body.password || getUserByEmail(req.body.email, users)) {
     res.statusCode = 400;
     res.send("<h1>400 BAD REQUEST</h1>");
   } else {
@@ -112,22 +56,22 @@ app.post("/register", (req, res) => {
       id: randomID,
       email: req.body.email,
       password: bcrypt.hashSync(req.body.password, saltRounds)
-    }
+    };
     req.session["user_id"] = randomID;
     res.redirect("/urls");
   }
-})
+});
 
 // Adding a route to new URL
 app.get("/urls/new", (req, res) => {
-// Logic for login
-let userID = res.session["user_id"];
+  // Logic for login
+  let userID = req.session["user_id"];
   if (!userID) {
     res.redirect('/register');
   } else {
     const templateVars = {
       urls: urlDatabase.longURL,
-      user: users[res.session["user_id"]]
+      user: users[req.session["user_id"]]
     };
     res.render("urls_new", templateVars);
   }
@@ -138,7 +82,7 @@ app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL].longURL,
-    user: users[res.session["user_id"]]
+    user: users[req.session["user_id"]]
   };
   res.render("urls_show", templateVars);
 });
@@ -148,16 +92,16 @@ app.post("/urls", (req, res) => {
   let randomString = generateRandomString();
   urlDatabase[randomString] = {
     longURL: req.body.longURL,
-    userID: res.session["user_id"]
-  }
+    userID: req.session["user_id"]
+  };
   //Now we redirect to the index
   res.redirect('/urls');
 });
 
 // Route to delete from database
 app.post("/urls/:shortURL/delete", (req, res) => {
-// Logic for login
-let userID = res.session["user_id"];
+  // Logic for login
+  let userID = req.session["user_id"];
   if (!userID) {
     res.redirect("/register");
   } else {
@@ -169,8 +113,8 @@ let userID = res.session["user_id"];
 
 // Route to edit
 app.post("/urls/:shortURL", (req, res) => {
-// Logic for login
-let userID = res.session["user_id"];
+  // Logic for login
+  let userID = req.session["user_id"];
   if (!userID) {
     res.redirect("/register");
   } else {
@@ -179,8 +123,8 @@ let userID = res.session["user_id"];
     let newURL = req.body.newAddress;
     urlDatabase[key] = {
       longURL: newURL,
-      userID : userID
-    }
+      userID: userID
+    };
     res.redirect(`/urls/${key}`);
   }
 });
@@ -208,10 +152,10 @@ app.post("/login", (req, res) => {
     req.session["user_id"] = existingUser.id;
     // redirect to /urls
     res.redirect("/urls");
-    return
+    return;
   }
   req.statusCode = 403;
-  res.send('<h1> ERROR 403 - Invalid Email Or Password </h1>')
+  res.send('<h1> ERROR 403 - Invalid Email Or Password </h1>');
 });
 
 // Route to logout
