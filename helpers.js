@@ -17,7 +17,7 @@ let getUserByEmail = function(email, database) {
       return database[randomIDKey];
     }
   }
-  return false;
+  return undefined;
 };
 
 // Returns URL where the userID is equal to the current logged in user
