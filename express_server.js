@@ -50,6 +50,8 @@ let emailChecker = function (obj, email) {
   return false;
 };
 
+
+
 // Logic for login
 let loggedIn = false;
 
@@ -126,7 +128,8 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls", (req, res) => {
   let randomString = generateRandomString();
   urlDatabase[randomString] = {
-    longURL: req.body.longURL
+    longURL: req.body.longURL,
+    userID: req.cookies.user_id
   }
   //Now we redirect to the index
   res.redirect('/urls');
@@ -145,7 +148,8 @@ app.post("/urls/:shortURL", (req, res) => {
   // Using the field provided in urls_show name of the text box
   let newURL = req.body.newAddress;
   urlDatabase[key] = {
-    longURL: newURL
+    longURL: newURL,
+    userID : req.cookies.user_id
   }
   res.redirect(`/urls/${key}`);
 });
