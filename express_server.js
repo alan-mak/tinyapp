@@ -3,6 +3,8 @@ const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieParser = require('cookie-parser');
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -19,12 +21,12 @@ const users = {
   "userRandomID": {
     id: "userRandomID",
     email: "user@example.com",
-    password: "123"
+    password: bcrypt.hashSync("123", saltRounds)
   },
   "user2RandomID": {
     id: "user2RandomID",
     email: "user2@example.com",
-    password: "dishwasher-funk"
+    password: bcrypt.hashSync("dishwasher-funk", saltRounds)
   }
 };
 
@@ -34,7 +36,7 @@ let generateRandomString = () => Math.random().toString(36).substring(2, 8);
 // Checks Email and Password in database
 const loginUser = function (users, email, password) {
   for (let key in users) {
-    if ((users[key].email === email) && (users[key].password === password)) {
+    if ((users[key].email === email) && (bcrypt.compareSync(password, users[key].password))) {
       return users[key]
     }
   }
@@ -68,6 +70,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls.json", (req, res) => res.json(urlDatabase));
+app.get("/urls/users.json", (req, res) => res.json(users));
 
 // Adding a route handler to pass the URL to template
 app.get("/urls", (req, res) => {
@@ -105,7 +108,7 @@ app.post("/register", (req, res) => {
     users[randomID] = {
       id: randomID,
       email: req.body.email,
-      password: req.body.password
+      password: bcrypt.hashSync(req.body.password, saltRounds)
     }
     res.cookie("user_id", randomID);
     res.redirect("/urls");
