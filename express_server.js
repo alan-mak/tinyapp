@@ -145,8 +145,7 @@ app.post("/urls/:shortURL", (req, res) => {
   // Using the field provided in urls_show name of the text box
   let newURL = req.body.newAddress;
   urlDatabase[key] = {
-    longURL: newURL,
-    // userID: 
+    longURL: newURL
   }
   res.redirect(`/urls/${key}`);
 });
