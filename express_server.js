@@ -9,9 +9,9 @@ app.use(cookieParser());
 
 app.set("view engine", "ejs");
 
-let urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+const urlDatabase = {
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
 };
 
 // Store and access users in an app
@@ -105,7 +105,7 @@ app.get("/urls/new", (req, res) => {
     res.redirect('/register');
   } else {
     const templateVars = {
-      urls: urlDatabase,
+      urls: urlDatabase.longURL,
       user: users[req.cookies["user_id"]]
     };
     res.render("urls_new", templateVars);
@@ -116,7 +116,7 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {
     shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL],
+    longURL: urlDatabase[req.params.shortURL].longURL,
     user: users[req.cookies["user_id"]]
   };
   res.render("urls_show", templateVars);
@@ -125,8 +125,9 @@ app.get("/urls/:shortURL", (req, res) => {
 // Route to log request
 app.post("/urls", (req, res) => {
   let randomString = generateRandomString();
-  urlDatabase[randomString] = req.body.longURL;
-
+  urlDatabase[randomString] = {
+    longURL: req.body.longURL
+  }
   //Now we redirect to the index
   res.redirect('/urls');
 });
@@ -143,13 +144,16 @@ app.post("/urls/:shortURL", (req, res) => {
   let key = req.params.shortURL;
   // Using the field provided in urls_show name of the text box
   let newURL = req.body.newAddress;
-  urlDatabase[key] = newURL;
+  urlDatabase[key] = {
+    longURL: newURL,
+    // userID: 
+  }
   res.redirect(`/urls/${key}`);
 });
 
 // Redirection to LongURL
 app.get("/u/:shortURL", (req, res) => {
-  res.redirect(urlDatabase[req.params.shortURL]);
+  res.redirect(urlDatabase[req.params.shortURL].longURL);
 });
 
 // Route to login
