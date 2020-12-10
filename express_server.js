@@ -62,9 +62,6 @@ let urlsForUser = function(id) {
   return userURL;
 }
 
-// Logic for login
-let loggedIn = false;
-
 // Main Page redirection
 app.get("/", (req, res) => {
   res.redirect("/urls");
@@ -111,14 +108,15 @@ app.post("/register", (req, res) => {
       password: req.body.password
     }
     res.cookie("user_id", randomID);
-    loggedIn = true;
     res.redirect("/urls");
   }
 })
 
 // Adding a route to new URL
 app.get("/urls/new", (req, res) => {
-  if (!loggedIn) {
+// Logic for login
+let userID = req.cookies.user_id;
+  if (!userID) {
     res.redirect('/register');
   } else {
     const templateVars = {
@@ -152,21 +150,33 @@ app.post("/urls", (req, res) => {
 
 // Route to delete from database
 app.post("/urls/:shortURL/delete", (req, res) => {
-  let key = req.params.shortURL;
-  delete urlDatabase[key];
-  res.redirect('/urls');
+// Logic for login
+let userID = req.cookies.user_id;
+  if (!userID) {
+    res.redirect("/register");
+  } else {
+    let key = req.params.shortURL;
+    delete urlDatabase[key];
+    res.redirect('/urls');
+  }
 });
 
 // Route to edit
 app.post("/urls/:shortURL", (req, res) => {
-  let key = req.params.shortURL;
-  // Using the field provided in urls_show name of the text box
-  let newURL = req.body.newAddress;
-  urlDatabase[key] = {
-    longURL: newURL,
-    userID : req.cookies.user_id
+// Logic for login
+let userID = req.cookies.user_id;
+  if (!userID) {
+    res.redirect("/register");
+  } else {
+    let key = req.params.shortURL;
+    // Using the field provided in urls_show name of the text box
+    let newURL = req.body.newAddress;
+    urlDatabase[key] = {
+      longURL: newURL,
+      userID : userID
+    }
+    res.redirect(`/urls/${key}`);
   }
-  res.redirect(`/urls/${key}`);
 });
 
 // Redirection to LongURL
@@ -190,7 +200,6 @@ app.post("/login", (req, res) => {
   if (existingUser) {
     // set the cookie with user.id
     res.cookie("user_id", existingUser.id);
-    loggedIn = true;
     // redirect to /urls
     res.redirect("/urls");
     return
@@ -203,7 +212,6 @@ app.post("/login", (req, res) => {
 app.post("/logout", (req, res) => {
   // Clear cookies command by user_id
   res.clearCookie("user_id");
-  loggedIn = false;
   res.redirect('/urls');
 });
 
