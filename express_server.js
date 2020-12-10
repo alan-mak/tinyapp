@@ -50,6 +50,9 @@ let emailChecker = function (obj, email) {
   return false;
 };
 
+// Logic for login
+let loggedIn = false;
+
 // Main Page redirection
 app.get("/", (req, res) => {
   res.redirect("/urls");
@@ -91,17 +94,22 @@ app.post("/register", (req, res) => {
       password: req.body.password
     }
     res.cookie("user_id", randomID);
+    loggedIn = true;
     res.redirect("/urls");
   }
 })
 
 // Adding a route to new URL
 app.get("/urls/new", (req, res) => {
-  const templateVars = {
-    urls: urlDatabase,
-    user: users[req.cookies["user_id"]]
-  };
-  res.render("urls_new", templateVars);
+  if (!loggedIn) {
+    res.redirect('/register');
+  } else {
+    const templateVars = {
+      urls: urlDatabase,
+      user: users[req.cookies["user_id"]]
+    };
+    res.render("urls_new", templateVars);
+  }
 });
 
 // Adding a route for long url to short url
@@ -159,7 +167,8 @@ app.post("/login", (req, res) => {
   const existingUser = loginUser(users, req.body.email, req.body.password);
   if (existingUser) {
     // set the cookie with user.id
-    res.cookie("user_id", users[existingUser.id].id)
+    res.cookie("user_id", users[existingUser.id].id);
+    loggedIn = true;
     // redirect to /urls
     res.redirect("/urls");
     return
@@ -172,6 +181,7 @@ app.post("/login", (req, res) => {
 app.post("/logout", (req, res) => {
   // Clear cookies command by user_id
   res.clearCookie("user_id");
+  loggedIn = false;
   res.redirect('/urls');
 });
 
