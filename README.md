@@ -13,7 +13,7 @@ TinyApp is a full stack web application built with Node and Express that allows 
 * Registered and logged in users are able to edit and delete their own links
   * Anyone is able to click on the shortened link
 * All shortened links are selectable and will redirect to to the long URL
-* Users are able to see their emails when logged in
+* Users are able to see their email account name when logged in
 
 ## Final Product
 
