@@ -5,12 +5,12 @@ const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const methodOverride = require('method-override')
+const methodOverride = require('method-override');
 const { urlsForUser, getUserByEmail, loginUser, generateRandomString } = require("./helpers");
 const { urlDatabase, users } = require("./data");
 
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(methodOverride('_method'))
+app.use(methodOverride('_method'));
 app.use(cookieSession({
   name: 'session',
   keys: ['key1', 'key2']
