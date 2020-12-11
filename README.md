@@ -26,7 +26,7 @@ Registered user's are able to have their own library of shortened links to share
 
 
 Registered user's are able to reuse their shortened URL by providing a new URL
-!["Edit Page"]()
+!["Edit Page"](https://github.com/alan-mak/tinyapp/blob/master/docs/edit.png)
 ## Dependencies
 
 - Node.js
