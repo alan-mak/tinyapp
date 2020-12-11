@@ -1,8 +1,8 @@
 BROWSE     GET/urls
 READ       GET/urls/:shortURL
 ADD        POST/urls/new
-DELETE     POST/urls/:shortURL/delete
+DELETE     DELETE/urls/:shortURL/delete
 EDIT       POST/urls/:shortURL
-LOGIN      POST/login
-LOGOUT     POST/logout
+LOGIN      GET/login
+LOGOUT     GET/logout
 REGISTER   GET/register

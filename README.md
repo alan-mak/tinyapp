@@ -21,12 +21,12 @@ A simple user friendly home page to shorten the longest of URLs
 !["Main URL Page"](https://github.com/alan-mak/tinyapp/blob/master/docs/urls-page.png)
 
 
-Registered user's are able to have their own shortned links to share
+Registered user's are able to have their own library of shortened links to share
 !["Different User's Different Link"](https://github.com/alan-mak/tinyapp/blob/master/docs/different-users.png)
 
 
 Registered user's are able to reuse their shortened URL by providing a new URL
-!["Edit Page"](https://github.com/alan-mak/tinyapp/blob/master/docs/edit-page.png)
+!["Edit Page"]()
 ## Dependencies
 
 - Node.js
@@ -35,8 +35,11 @@ Registered user's are able to reuse their shortened URL by providing a new URL
 - bcrypt
 - body-parser
 - cookie-session
+- method-override
 
 ## Getting Started
 
 - Install all dependencies (using the `npm install` command).
 - Run the development web server using the `node express_server.js` command.
+
+### Version 1.0

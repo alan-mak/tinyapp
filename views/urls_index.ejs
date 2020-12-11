@@ -33,7 +33,7 @@
           <td><%= urls[url].longURL %></td>
           <!-- Creating a button to delete the post -->
           <td>
-            <form method="POST" action="/urls/<%= url %>/delete">
+            <form method="POST" action="/urls/<%= url %>/delete?_method=DELETE">
               <button type="submit" class="btn btn-primary">Delete</button>
             </form>
           </td>
