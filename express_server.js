@@ -84,12 +84,18 @@ app.get("/urls/new", (req, res) => {
 
 // Adding a route form short url to long url
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = {
-    shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL].longURL,
-    user: users[req.session["user_id"]]
-  };
-  res.render("urls_show", templateVars);
+  // Login Logic
+  let userID = req.session["user_id"];
+  if (!userID) {
+    res.redirect('/register');
+  } else {
+    const templateVars = {
+      shortURL: req.params.shortURL,
+      longURL: urlDatabase[req.params.shortURL].longURL,
+      user: users[req.session["user_id"]]
+    };
+    res.render("urls_show", templateVars);
+  }
 });
 
 // Route to log request
@@ -134,7 +140,7 @@ app.put("/urls/:shortURL", (req, res) => {
   }
 });
 
-// Redirection to LongURL
+// Redirection to LongURL even if not logged in
 app.get("/u/:shortURL", (req, res) => {
   res.redirect(urlDatabase[req.params.shortURL].longURL);
 });
